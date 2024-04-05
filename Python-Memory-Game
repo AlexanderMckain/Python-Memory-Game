@@ -1,0 +1,71 @@
+#importing modules to run the code
+import random 
+import time
+import os
+import getpass
+
+#Welcome message followed relying on user input to continue
+getpass.getpass(prompt="Welcome to the memory game, press Enter to continue") #getpass is used to hide user input and only continue via ENTER
+print("You have 5 seconds to memorize the following numbers")
+
+#3 Second delay to prepare the player
+time.sleep(3) 
+
+#function to generate random numbers
+def generate_random_numbers(length): 
+  #Random numbers generated within range 1-10
+  return [random.randint(1, 10) for _ in range(length)] 
+
+
+
+#clear screen function to be called after each round so the player cannot see the numbers
+def clear_screen(): 
+  if os.name == 'nt':
+      os.system('cls')
+  else:
+      os.system('clear')
+
+
+def play_game(length_of_list):
+  #Random numbers generated to the length of the list
+  random_numbers = generate_random_numbers(length_of_list) 
+
+  print("Memorize the numbers:")\
+  #Random numbers list printed
+  print(random_numbers)
+  #5 second delay to allow player to memorize the numbers
+  time.sleep(5) 
+
+  #clear screeen to hide the numbers
+  clear_screen() 
+
+  #Enter input to continue, this is needed so that previous input is not counted towards correct guesses
+
+  getpass.getpass(prompt="Press Enter to guess the numbers") 
+
+  #print statement to prompt player to input their numbers
+  print("Now, input the numbers.") 
+  #The user's guesses are stored in a list
+  user_guesses = [] 
+  #the loop will run the length of the list
+  for i in range(length_of_list):
+      #the users will input guesses
+      user_input = int(input(f"Enter guess {i+1}: "))
+      #the users guesses are added to the list
+      user_guesses.append(user_input) 
+  #the correct guesses for numbers in a set if they are in the random numbers
+  correct_guesses = [num for num in set(user_guesses) if num in random_numbers] 
+  #if the user guesses all the numbers correctly they move on to the next round
+  if len(correct_guesses) == length_of_list: 
+    getpass.getpass(prompt="Congratulations! Press ENTER to start the next round.:")
+    play_game(length_of_list + 1) 
+  #if the user does not guess all the numbers correctly they lose the game
+  else:
+    print("Sorry, you had an incorrect number. Try again.")
+
+#if the file is run directly, the game will start
+if __name__ == "__main__":
+  #You can change this to your desired initial length
+  initial_length = 3
+  #the game will start with the initial length
+  play_game(initial_length) 
